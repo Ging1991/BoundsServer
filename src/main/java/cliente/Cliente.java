@@ -37,7 +37,7 @@ public class Cliente {
 	
 	public static void main(String[] args) {
 		Cliente restClient = new Cliente();
-		//fire the get request
+		//fire the get requestjhjh
 		restClient.getRequest();
 		
 		//fire the post request
