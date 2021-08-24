@@ -18,8 +18,8 @@ public class FrecuenciaManager {
 		
 		// Si no existia, la creo
 		if (frecuencia == null) {
-			obd.insert(new Frecuencia(cartaID, 0));
-			frecuencia = obd.selectByID(cartaID);
+			obd.insert(new Frecuencia(cartaID, 1));
+			return;
 		}
 		
 		// Incremento la cantidad
