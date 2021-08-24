@@ -7,10 +7,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import persistencia.entidad.Frecuencia;
-import persistencia.interfaz.GenerarEntidad;
+import persistencia.interfaz.Generardor;
 
-public class OBD {
+public class OBD <entidad> {
 	protected String driver = "org.postgresql.Driver";
 	
 	// Local
@@ -23,38 +22,39 @@ public class OBD {
 	protected String usuarioBD = "wqsxovprvndbsq"; 
 	protected String passwordBD = "793bf52f8c2de23032241b0f7f32365cfa1fc1d885c91cd8c68fb94584fe4097";
 	
-	public void ejecutarComandoSQL(String sql) {
+	public void ejecutarSQL(String SQL) {
 		try { 
 			Class.forName(driver); 
 			Connection conexion = DriverManager.getConnection(cadenaConexion, usuarioBD, passwordBD);
 			Statement sentencia = conexion.createStatement ();
-			sentencia.executeUpdate(sql);		
+			sentencia.executeUpdate(SQL);		
 			sentencia.close();
 			conexion.close();
 			
-		}catch(Exception e) {
-			System.out.println("       ERROR: "+sql);
+		} catch(Exception e) {
+			System.out.println("       ERROR: " + SQL);
 			e.printStackTrace();
 		}
 		
 	}
 
-	public Object ejecutarComandoSQL(String SQL, GenerarEntidad generador) {
-		Object ret = null;
+	public List<entidad> select(String SQL, Generardor<entidad> generador) {
+		List<entidad> ret = new ArrayList<entidad>();
 		try { 
 			Class.forName(driver); 
 			Connection conexion = DriverManager.getConnection(cadenaConexion, usuarioBD, passwordBD); 
 			Statement sentencia = conexion.createStatement ();
 			ResultSet resultados = sentencia.executeQuery(SQL);			
 
-			ret = generador.generar(resultados);
-			
+			while (resultados.next())
+				ret.add(generador.generar(resultados));
+
 			resultados.close();
 			sentencia.close();
 			conexion.close();
 			
 		}catch(Exception e) {
-			System.out.println(SQL);
+			System.out.println("       ERROR: " + SQL);
 			e.printStackTrace();
 		}
 			
