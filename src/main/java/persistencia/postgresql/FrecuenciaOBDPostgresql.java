@@ -3,6 +3,7 @@ package persistencia.postgresql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +11,9 @@ import java.util.List;
 import persistencia.OBD;
 import persistencia.entidad.Frecuencia;
 import persistencia.interfaz.FrecuenciaOBD;
+import persistencia.interfaz.GenerarEntidad;
 
-public class FrecuenciaOBDPostgresql extends OBD implements FrecuenciaOBD {
+public class FrecuenciaOBDPostgresql extends OBD implements FrecuenciaOBD, GenerarEntidad {
 	public String tabla = "frecuencias";
 	public String campos = "cantidad";
 	
@@ -72,6 +74,30 @@ public class FrecuenciaOBDPostgresql extends OBD implements FrecuenciaOBD {
 			e.printStackTrace();
 		}
 			
+		return ret;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Frecuencia> selectByCondicion1(String condicion) {
+		String comandoSQL = "select ID, " + campos + " from " + tabla + " where ("+condicion+");";
+		Object ret = ejecutarComandoSQL(comandoSQL, this);
+			
+		return (List<Frecuencia>) ret;
+	}
+
+	public Object generar(ResultSet resultados) {
+		List<Frecuencia> ret = new ArrayList<Frecuencia>();
+		try {
+			while (resultados.next()) {
+				ret.add(new Frecuencia(
+						resultados.getInt("ID"),
+						resultados.getInt("cantidad")
+					));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return ret;
 	}
 
