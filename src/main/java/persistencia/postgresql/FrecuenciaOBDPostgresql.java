@@ -2,15 +2,18 @@ package persistencia.postgresql;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 import infraestructura.OBD;
 import persistencia.entidad.Frecuencia;
 import persistencia.interfaz.FrecuenciaOBD;
 
 public class FrecuenciaOBDPostgresql extends OBD<Frecuencia> implements FrecuenciaOBD {
-	public String tabla = "frecuencias";
-	public String campos = "cantidad";
+
+	// Inicializa el OBD
+	public FrecuenciaOBDPostgresql() {
+		tabla = "frecuencias";
+		campos = "cantidad";
+	}
 	
 	public void insert(Frecuencia frecuencia) {
 		String comandoSQL = "INSERT INTO " + tabla + "(id, " + campos + ") "
@@ -25,28 +28,6 @@ public class FrecuenciaOBDPostgresql extends OBD<Frecuencia> implements Frecuenc
 		ejecutarSQL(consulta);
 	}
 
-	public void delete(Frecuencia frecuencia) {
-		String condicion = "ID = " + frecuencia.getId();
-		String consulta = "delete from " + tabla + " where ("+condicion+");";
-		ejecutarSQL(consulta);
-	}
-
-	public Frecuencia selectByID(Integer ID) {
-		String condicion = "ID = " + ID;
-		return selectUnicoByCondicion(condicion);
-	}
-
-	private Frecuencia selectUnicoByCondicion(String condicion) {
-		List<Frecuencia> lista = selectByCondicion(condicion);
-		if (lista.size() > 0)
-			return lista.get(0);
-		return null;
-	}
-
-	private List<Frecuencia> selectByCondicion(String condicion) {
-		String comandoSQL = "select ID, " + campos + " from " + tabla + " where ("+condicion+");";
-		return select(comandoSQL);
-	}
 
 	public Frecuencia generar(ResultSet resultados) {
 		Frecuencia ret = null;
@@ -62,6 +43,11 @@ public class FrecuenciaOBDPostgresql extends OBD<Frecuencia> implements Frecuenc
 		}
 		
 		return ret;
+	}
+
+	@Override
+	protected Integer getID(Frecuencia e) {
+		return e.getId();
 	}
 
 }

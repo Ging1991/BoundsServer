@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class OBD <entidad> {
+	public String tabla;
+	public String campos;
 	protected static String driver;
 	protected static String cadenaConexion;
 	protected static String usuarioBD; 
@@ -61,5 +63,33 @@ public abstract class OBD <entidad> {
 
 	// Devuelve un unico elemento de clase [entidad] extraido de los resultados
 	public abstract entidad generar(ResultSet resultados);
-			
+	
+	// Devuelve un unico elemento de clase [entidad] extraido de los resultados
+	protected abstract Integer getID(entidad e);
+	
+	// Metodos SQL estandar
+	public void delete(entidad e) {
+		String consulta = "delete from " + tabla + " where (ID = " + getID(e) +");";
+		ejecutarSQL(consulta);
+	}
+	
+	public List<entidad> selectByCondicion(String condicion) {
+		String comandoSQL = "select ID, " + campos + " from " + tabla + " where ("+condicion+");";
+		return select(comandoSQL);
+	}
+	
+	public entidad selectUnicoByCondicion(String condicion) {
+		List<entidad> lista = selectByCondicion(condicion);
+		if (lista.size() > 0)
+			return lista.get(0);
+		return null;
+	}
+	
+	public entidad selectByID(Integer ID) {
+		String condicion = "ID = " + ID;
+		return selectUnicoByCondicion(condicion);
+	}
+
+
+	
 }
