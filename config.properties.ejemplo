@@ -1,0 +1,5 @@
+#Wed Aug 25 17:24:39 ART 2021
+passwordBD=TuPass
+usuarioBD=TuUsuario
+driver=org.postgresql.Driver
+cadenaConexion=TuCadena

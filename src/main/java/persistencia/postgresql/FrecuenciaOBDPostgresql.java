@@ -4,12 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import persistencia.OBD;
+import infraestructura.OBD;
 import persistencia.entidad.Frecuencia;
 import persistencia.interfaz.FrecuenciaOBD;
-import persistencia.interfaz.Generardor;
 
-public class FrecuenciaOBDPostgresql extends OBD<Frecuencia> implements FrecuenciaOBD, Generardor<Frecuencia> {
+public class FrecuenciaOBDPostgresql extends OBD<Frecuencia> implements FrecuenciaOBD {
 	public String tabla = "frecuencias";
 	public String campos = "cantidad";
 	
@@ -20,7 +19,7 @@ public class FrecuenciaOBDPostgresql extends OBD<Frecuencia> implements Frecuenc
 	}
 
 	public void update(Frecuencia frecuencia) {
-		String condicion = "ID = "+frecuencia.getId();
+		String condicion = "ID = " + frecuencia.getId();
 		String valores = "cantidad = "+ frecuencia.getCantidad();
 		String consulta = "update " + tabla + " set " + valores + "  where ("+condicion+");";
 		ejecutarSQL(consulta);
@@ -46,7 +45,7 @@ public class FrecuenciaOBDPostgresql extends OBD<Frecuencia> implements Frecuenc
 
 	private List<Frecuencia> selectByCondicion(String condicion) {
 		String comandoSQL = "select ID, " + campos + " from " + tabla + " where ("+condicion+");";
-		return select(comandoSQL, this);
+		return select(comandoSQL);
 	}
 
 	public Frecuencia generar(ResultSet resultados) {
