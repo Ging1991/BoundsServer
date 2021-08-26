@@ -8,9 +8,13 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Configuracion {
-	private static final String direccion = "config.properties";
+	private String direccion;
 	
-	public static String recuperar(String clave) {
+	public Configuracion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String recuperar(String clave) {
 		Properties propiedades = new Properties();
 		InputStream entrada = null;
 		String ret = "";
@@ -37,7 +41,7 @@ public class Configuracion {
 		return ret;
 	}
 	
-	public static void guardar(String clave, String valor) {
+	public void guardar(String clave, String valor) {
 		
 		Properties propiedades = new Properties();
 		
@@ -94,16 +98,18 @@ public class Configuracion {
 	
 	public static void main(String[] args) {
 		
-		// Ejecutar para guardar los valores por primera vez o cambiarlos
-		guardar("cadenaConexion", "TuCadena");
-		guardar("usuarioBD", "TuUsuario");
-		guardar("passwordBD", "TuPass");
-		guardar("driver", "org.postgresql.Driver");
+		Configuracion configuracion = new Configuracion("config.properties");
 		
-		System.out.println("Cadena conexion: " + recuperar("cadenaConexion"));
-		System.out.println("Usuario BD: " + recuperar("usuarioBD"));
-		System.out.println("Password BD: " + recuperar("passwordBD"));
-		System.out.println("Driver : " + recuperar("driver"));
+		// Ejecutar para guardar los valores por primera vez o cambiarlos
+		configuracion.guardar("cadenaConexion", "TuCadena");
+		configuracion.guardar("usuarioBD", "TuUsuario");
+		configuracion.guardar("passwordBD", "TuPass");
+		configuracion.guardar("driver", "org.postgresql.Driver");
+		
+		System.out.println("Cadena conexion: " + configuracion.recuperar("cadenaConexion"));
+		System.out.println("Usuario BD: " + configuracion.recuperar("usuarioBD"));
+		System.out.println("Password BD: " + configuracion.recuperar("passwordBD"));
+		System.out.println("Driver : " + configuracion.recuperar("driver"));
 	}
 
 }

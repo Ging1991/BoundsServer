@@ -17,10 +17,11 @@ public abstract class OBD <entidad> {
 	protected static String passwordBD;
 
 	static {
-		cadenaConexion = Configuracion.recuperar("cadenaConexion");
-		usuarioBD = Configuracion.recuperar("usuarioBD");
-		passwordBD = Configuracion.recuperar("passwordBD");
-		driver = Configuracion.recuperar("driver");
+		Configuracion configuracion = new Configuracion("config.properties");
+		driver = configuracion.recuperar("driver");
+		cadenaConexion = configuracion.recuperar("cadenaConexion");
+		usuarioBD = configuracion.recuperar("usuarioBD");
+		passwordBD = configuracion.recuperar("passwordBD");
 	}
 		
 	public void ejecutarSQL(String SQL) {
