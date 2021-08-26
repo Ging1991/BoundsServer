@@ -3,6 +3,7 @@ package persistencia.postgresql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import infraestructura.GeneradorSQL;
 import infraestructura.OBD;
 import persistencia.entidad.Frecuencia;
 import persistencia.interfaz.FrecuenciaOBD;
@@ -15,39 +16,25 @@ public class FrecuenciaOBDPostgresql extends OBD<Frecuencia> implements Frecuenc
 		campos = "cantidad";
 	}
 	
-	public void insert(Frecuencia frecuencia) {
+	public void insertConID(Frecuencia frecuencia) {
 		String comandoSQL = "INSERT INTO " + tabla + "(id, " + campos + ") "
 				+ "VALUES (" + frecuencia.getId() +","+frecuencia.getCantidad()+");";
 		ejecutarSQL(comandoSQL);
 	}
 
-	public void update(Frecuencia frecuencia) {
-		String condicion = "ID = " + frecuencia.getId();
-		String valores = "cantidad = "+ frecuencia.getCantidad();
-		String consulta = "update " + tabla + " set " + valores + "  where ("+condicion+");";
-		ejecutarSQL(consulta);
-	}
-
-
-	public Frecuencia generar(ResultSet resultados) {
-		Frecuencia ret = null;
-		try {
-			
-			ret = new Frecuencia(
+	public Frecuencia generar(ResultSet resultados) throws SQLException {
+		return new Frecuencia(
 				resultados.getInt("ID"),
 				resultados.getInt("cantidad")
 			);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return ret;
 	}
 
 	@Override
-	protected Integer getID(Frecuencia e) {
-		return e.getId();
+	public GeneradorSQL getGenerador(Frecuencia e) {
+		GeneradorSQL ret = new GeneradorSQL(tabla);
+		ret.agregar("ID", e.getId());
+		ret.agregar("cantidad", e.getCantidad());
+		return ret;
 	}
 
 }

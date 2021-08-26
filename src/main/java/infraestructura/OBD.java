@@ -3,6 +3,7 @@ package infraestructura;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,17 +63,31 @@ public abstract class OBD <entidad> {
 	}
 
 	// Devuelve un unico elemento de clase [entidad] extraido de los resultados
-	public abstract entidad generar(ResultSet resultados);
+	public abstract entidad generar(ResultSet resultados) throws SQLException;
 	
-	// Devuelve un unico elemento de clase [entidad] extraido de los resultados
-	protected abstract Integer getID(entidad e);
-	
+
+	protected abstract GeneradorSQL getGenerador(entidad e);
+
 	// Metodos SQL estandar
-	public void delete(entidad e) {
-		String consulta = "delete from " + tabla + " where (ID = " + getID(e) +");";
+	public void insert(entidad e) {
+		GeneradorSQL sql = getGenerador(e);
+		String consulta = sql.generarInsert();
 		ejecutarSQL(consulta);
 	}
-	
+
+	public void update(entidad e) {
+		GeneradorSQL sql = getGenerador(e);
+		String consulta = sql.generarUpdate();
+		ejecutarSQL(consulta);
+	}
+
+	// Metodos SQL estandar
+	public void delete(entidad e) {
+		GeneradorSQL sql = getGenerador(e);
+		String consulta = sql.generarDelete();
+		ejecutarSQL(consulta);
+	}
+		
 	public List<entidad> selectByCondicion(String condicion) {
 		String comandoSQL = "select ID, " + campos + " from " + tabla + " where ("+condicion+");";
 		return select(comandoSQL);
@@ -89,7 +104,5 @@ public abstract class OBD <entidad> {
 		String condicion = "ID = " + ID;
 		return selectUnicoByCondicion(condicion);
 	}
-
-
 	
 }

@@ -18,7 +18,7 @@ public class FrecuenciaManager {
 		
 		// Si no existia, la creo
 		if (frecuencia == null) {
-			obd.insert(new Frecuencia(cartaID, 1));
+			obd.insertConID(new Frecuencia(cartaID, 1));
 			return;
 		}
 		
